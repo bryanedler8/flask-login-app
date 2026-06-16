@@ -1,0 +1,55 @@
+### Health Check
+GET https://<your-app-name>.azurewebsites.net/health
+
+### ============================================
+### TEST 1: Failed Login Attempts (Should generate warning logs)
+### ============================================
+
+### Failed attempt 1 - wrong password
+POST https://<your-app-name>.azurewebsites.net/login?username=attacker&password=wrongpassword
+
+### Failed attempt 2 - wrong password
+POST https://<your-app-name>.azurewebsites.net/login?username=attacker&password=wrongpassword2
+
+### Failed attempt 3 - wrong password
+POST https://<your-app-name>.azurewebsites.net/login?username=attacker&password=wrongpassword3
+
+### Failed attempt 4 - wrong password
+POST https://<your-app-name>.azurewebsites.net/login?username=attacker&password=wrongpassword4
+
+### Failed attempt 5 - wrong password
+POST https://<your-app-name>.azurewebsites.net/login?username=attacker&password=wrongpassword5
+
+### Failed attempt 6 - wrong password (This should trigger the alert if threshold is 5)
+POST https://<your-app-name>.azurewebsites.net/login?username=attacker&password=wrongpassword6
+
+### ============================================
+### TEST 2: Successful Login Attempts
+### ============================================
+
+### Successful login - admin
+POST https://<your-app-name>.azurewebsites.net/login?username=admin&password=supersecret
+
+### Successful login - alice
+POST https://<your-app-name>.azurewebsites.net/login?username=alice&password=password123
+
+### ============================================
+### TEST 3: Missing Credentials (Should also log as warning)
+### ============================================
+
+### Missing username
+POST https://<your-app-name>.azurewebsites.net/login?password=test
+
+### Missing password
+POST https://<your-app-name>.azurewebsites.net/login?username=test
+
+### ============================================
+### TEST 4: Multiple Failed Attempts with Different Usernames
+### ============================================
+
+### Failed attempts for different users (should not trigger alert individually)
+POST https://<your-app-name>.azurewebsites.net/login?username=user1&password=wrong
+POST https://<your-app-name>.azurewebsites.net/login?username=user2&password=wrong
+POST https://<your-app-name>.azurewebsites.net/login?username=user3&password=wrong
+POST https://<your-app-name>.azurewebsites.net/login?username=user4&password=wrong
+POST https://<your-app-name>.azurewebsites.net/login?username=user5&password=wrong
