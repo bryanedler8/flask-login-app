@@ -35,7 +35,6 @@ python app.py
 
 ```kusto
 AppServiceConsoleLogs
-| where TimeGenerated > ago(15m)
 | where ResultDescription contains "FAILED login attempt"
 | extend Username = extract("Username: ([^,]+)", 1, ResultDescription)
 | summarize FailedAttempts = count() by Username, bin(TimeGenerated, 5m)
