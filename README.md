@@ -30,3 +30,13 @@ pip install -r requirements.txt
 
 # Run locally
 python app.py
+
+## KQL Query for Failed Login Detection
+
+```kusto
+AppServiceConsoleLogs
+| where TimeGenerated > ago(15m)
+| where ResultDescription contains "FAILED login attempt"
+| extend Username = extract("Username: ([^,]+)", 1, ResultDescription)
+| summarize FailedAttempts = count() by Username, bin(TimeGenerated, 5m)
+| where FailedAttempts > 5
