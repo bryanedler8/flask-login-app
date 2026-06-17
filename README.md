@@ -31,6 +31,34 @@ pip install -r requirements.txt
 # Run locally
 python app.py
 
+
+You're right, let me trim that down significantly. Here's a much shorter version:
+
+---
+## Demo Video
+
+🎥 [Watch Demo Video](https://youtu.be/lcJffrhx_a0)
+
+---
+
+
+### What I Learned
+- Writing effective KQL queries requires understanding both log structure and syntax.
+- Time binning (`bin(TimeGenerated, 5m)`) is essential for spotting attack patterns.
+- Regex extraction (`extract()`) is a practical skill for pulling data from free-text logs.
+
+### Challenges I Faced
+- Getting the regex pattern exactly right for the log format took trial and error.
+- The `bin()` function groups time into fixed intervals, which can miss attacks that span across boundaries.
+- Without IP tracking, the query can't distinguish between one user mistyping vs. a distributed attack.
+
+
+
+
+---
+
+
+
 ## KQL Query for Failed Login Detection
 
 ```kusto
@@ -39,3 +67,5 @@ AppServiceConsoleLogs
 | extend Username = extract("Username: ([^,]+)", 1, ResultDescription)
 | summarize FailedAttempts = count() by Username, bin(TimeGenerated, 5m)
 | where FailedAttempts > 5
+
+This detects potential brute-force attacks by flagging any username with 6+ failed login attempts within a 5-minute window.
